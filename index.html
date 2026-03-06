@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Focus Producciones</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#111;
+color:white;
+text-align:center;
+margin:0;
+}
+
+.container{
+display:none;
+padding:20px;
+}
+
+.active{
+display:block;
+}
+
+.card{
+background:#1e1e1e;
+padding:25px;
+border-radius:10px;
+width:350px;
+margin:auto;
+box-shadow:0px 0px 10px black;
+}
+
+input,select,button{
+width:90%;
+padding:10px;
+margin:8px;
+border-radius:5px;
+border:none;
+}
+
+button{
+background:#ff2a6d;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff4d85;
+}
+
+.link{
+color:#00eaff;
+cursor:pointer;
+font-size:14px;
+display:block;
+margin-top:5px;
+}
+
+.events{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+padding:30px;
+}
+
+.event{
+background:#1e1e1e;
+padding:20px;
+border-radius:10px;
+}
+
+.seats{
+display:flex;
+justify-content:center;
+gap:40px;
+margin-top:20px;
+}
+
+.section{
+border:1px solid white;
+padding:10px;
+}
+
+.seat{
+width:25px;
+height:25px;
+background:gray;
+margin:4px;
+display:inline-block;
+cursor:pointer;
+}
+
+.seat.selected{
+background:lime;
+}
+
+.stage{
+background:#444;
+padding:10px;
+margin:20px;
+}
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+justify-content:center;
+align-items:center;
+}
+
+.modalBox{
+background:white;
+color:black;
+padding:30px;
+border-radius:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="login" class="container active">
+<div class="card">
+
+<h1>Focus Producciones</h1>
+
+<input type="email" placeholder="Correo">
+<input type="password" placeholder="Contraseña">
+
+<button onclick="mostrar('eventos')">Iniciar Sesión</button>
+
+<span class="link" onclick="mostrar('registro')">Regístrate aquí</span>
+<span class="link" onclick="mostrar('recuperar')">¿Olvidaste contraseña?</span>
+
+</div>
+</div>
+
+
+<!-- REGISTRO -->
+
+<div id="registro" class="container">
+
+<div class="card">
+
+<h2>Registro</h2>
+
+<input placeholder="Nombre">
+<input placeholder="Apellidos">
+<input placeholder="Correo">
+<input placeholder="Contraseña">
+<input placeholder="Teléfono">
+
+<select id="pais" onchange="cargarCiudades()">
+<option>Seleccionar país</option>
+<option>Colombia</option>
+<option>México</option>
+<option>España</option>
+<option>Argentina</option>
+</select>
+
+<select id="ciudad">
+<option>Seleccionar ciudad</option>
+</select>
+
+<button onclick="mostrar('login')">Registrarse</button>
+
+</div>
+</div>
+
+
+<!-- RECUPERAR -->
+
+<div id="recuperar" class="container">
+
+<div class="card">
+
+<h2>Recuperar contraseña</h2>
+
+<input placeholder="Correo electrónico">
+
+<button onclick="alerta('Correo enviado correctamente')">
+Enviar código
+</button>
+
+</div>
+</div>
+
+
+<!-- EVENTOS -->
+
+<div id="eventos" class="container">
+
+<h1>Eventos disponibles</h1>
+
+<div class="events">
+
+<div class="event">
+<h3>Feid</h3>
+<p>Fecha: 10 Junio</p>
+<p>Edad: +18</p>
+<p>Concierto urbano</p>
+<button onclick="evento()">Comprar boletas</button>
+</div>
+
+<div class="event">
+<h3>Karol G</h3>
+<p>Fecha: 15 Junio</p>
+<p>Edad: +15</p>
+<p>Tour mundial</p>
+<button onclick="evento()">Comprar boletas</button>
+</div>
+
+<div class="event">
+<h3>Doom</h3>
+<p>Fecha: 20 Junio</p>
+<p>Edad: +18</p>
+<p>Metal Fest</p>
+<button onclick="evento()">Comprar boletas</button>
+</div>
+
+<div class="event">
+<h3>Bad Bunny</h3>
+<p>Fecha: 22 Junio</p>
+<p>Edad: +15</p>
+<p>Trap Tour</p>
+<button onclick="evento()">Comprar boletas</button>
+</div>
+
+<div class="event">
+<h3>Baswell</h3>
+<p>Fecha: 25 Junio</p>
+<p>Edad: +18</p>
+<p>Techno Night</p>
+<button onclick="evento()">Comprar boletas</button>
+</div>
+
+<div class="event">
+<h3>Romeo Santos</h3>
+<p>Fecha: 30 Junio</p>
+<p>Edad: +15</p>
+<p>Bachata Live</p>
+<button onclick="evento()">Comprar boletas</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- ASIENTOS -->
+
+<div id="asientos" class="container">
+
+<h2>Selecciona tus asientos</h2>
+
+<div class="stage">ESCENARIO</div>
+
+<div class="seats">
+
+<div class="section">
+<h3>VIP</h3>
+<div id="vip"></div>
+</div>
+
+<div class="section">
+<h3>Platea</h3>
+<div id="platea"></div>
+</div>
+
+<div class="section">
+<h3>Gradas</h3>
+<div id="gradas"></div>
+</div>
+
+</div>
+
+<button onclick="pagar()">Pagar asientos seleccionados</button>
+
+</div>
+
+
+<!-- BOLETAS -->
+
+<div id="boletas" class="container">
+
+<h2>Boletas compradas</h2>
+
+<button onclick="descargarPDF()">Descargar PDF</button>
+
+<button onclick="mostrar('eventos')">Volver a eventos</button>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div id="modal" class="modal">
+<div class="modalBox" id="modalText"></div>
+</div>
+
+
+<script>
+
+function mostrar(id){
+
+document.querySelectorAll(".container").forEach(c=>{
+c.classList.remove("active")
+})
+
+document.getElementById(id).classList.add("active")
+
+}
+
+function evento(){
+mostrar("asientos")
+}
+
+function alerta(texto){
+
+document.getElementById("modalText").innerText=texto
+document.getElementById("modal").style.display="flex"
+
+setTimeout(()=>{
+document.getElementById("modal").style.display="none"
+},2000)
+
+}
+
+function pagar(){
+
+alerta("Redirigiendo a PSE")
+
+setTimeout(()=>{
+alerta("Compra realizada con éxito")
+mostrar("boletas")
+},2000)
+
+}
+
+function crearSillas(id,cantidad){
+
+let cont=document.getElementById(id)
+
+for(let i=0;i<cantidad;i++){
+
+let seat=document.createElement("div")
+seat.className="seat"
+
+seat.onclick=()=>{
+seat.classList.toggle("selected")
+}
+
+cont.appendChild(seat)
+
+}
+
+}
+
+crearSillas("vip",20)
+crearSillas("platea",30)
+crearSillas("gradas",40)
+
+
+function cargarCiudades(){
+
+let pais=document.getElementById("pais").value
+let ciudad=document.getElementById("ciudad")
+
+ciudad.innerHTML=""
+
+let ciudades={
+
+Colombia:["Bogotá","Medellín","Cali","Barranquilla"],
+México:["CDMX","Guadalajara","Monterrey"],
+España:["Madrid","Barcelona","Valencia"],
+Argentina:["Buenos Aires","Córdoba","Rosario"]
+
+}
+
+if(ciudades[pais]){
+
+ciudades[pais].forEach(c=>{
+
+let op=document.createElement("option")
+op.text=c
+ciudad.add(op)
+
+})
+
+}
+
+}
+
+function descargarPDF(){
+
+alert("PDF descargado (simulación)")
+
+}
+
+</script>
+
+</body>
+</html>

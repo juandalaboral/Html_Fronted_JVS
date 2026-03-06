@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Focus Producciones</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+#login{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+
+/* AQUI PUEDES CAMBIAR LA IMAGEN */
+background-image:url("JVS.png");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
+body{
+font-family: Arial;
+margin:0;
+background:#111;
+color:white;
+text-align:center;
+}
+
+.modulo{
+display:none;
+padding:40px;
+}
+
+.activo{
+display:block;
+}
+
+.caja{
+background:rgba(0,0,0,0.7);
+padding:30px;
+border-radius:10px;
+width:320px;
+margin:auto;
+}
+
+input,select{
+width:90%;
+padding:10px;
+margin:8px;
+border-radius:50px;
+border:none;
+}
+
+button{
+padding:10px 20px;
+margin:8px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+background:#174e8d;
+color:white;
+font-weight:bold;
+}
+
+.eventos{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+padding:20px;
+}
+
+.evento{
+background:#222;
+padding:15px;
+border-radius:10px;
+}
+
+.evento img{
+width:100%;
+height:150px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.mapa{
+display:grid;
+grid-template-columns:repeat(10,40px);
+gap:5px;
+justify-content:center;
+margin-top:20px;
+}
+
+.asiento{
+width:40px;
+height:40px;
+background:#444;
+cursor:pointer;
+border-radius:4px;
+font-size:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.vip{background:#d4af37;}
+.grada{background:#555;}
+.platea{background:#1e90ff;}
+
+.seleccionado{
+background:#00ff88!important;
+}
+
+#escenario{
+background:red;
+padding:10px;
+margin:20px auto;
+width:200px;
+}
+
+#qr{
+margin-top:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Focus Producciones</h1>
+
+<!-- LOGIN -->
+
+<div id="login" class="modulo activo">
+
+<div class="caja">
+
+<h2>Iniciar Sesión</h2>
+
+<input type="email" placeholder="Correo">
+
+<input type="password" placeholder="Contraseña">
+
+<button onclick="abrir('eventos')">Iniciar sesión</button>
+
+<br>
+
+<button onclick="abrir('registro')">Regístrate aquí</button>
+
+<button onclick="abrir('recuperar')">Olvidaste contraseña</button>
+
+</div>
+
+</div>
+
+<!-- REGISTRO -->
+
+<div id="registro" class="modulo">
+
+<div class="caja">
+
+<h2>Registro</h2>
+
+<input placeholder="Nombre">
+
+<input placeholder="Apellidos">
+
+<input type="email" placeholder="Correo">
+
+<div style="position:relative">
+
+<input id="pass" type="password" placeholder="Contraseña">
+
+<span onclick="verPass()" style="position:absolute;right:20px;top:12px;cursor:pointer">👁</span>
+
+</div>
+
+<input placeholder="Teléfono">
+
+<select id="pais" onchange="cargarCiudades()">
+<option>Colombia</option>
+<option>México</option>
+<option>España</option>
+</select>
+
+<select id="ciudad"></select>
+
+<button onclick="abrir('login')">Registrar</button>
+
+</div>
+
+</div>
+
+<!-- RECUPERAR -->
+
+<div id="recuperar" class="modulo" style="background-image:url('FONDO.jpg'); background-size:cover;">
+
+<div class="caja">
+
+<h2>Recuperar contraseña</h2>
+
+<input placeholder="Correo electrónico">
+
+<button onclick="alert('Correo enviado correctamente')">Enviar código</button>
+
+</div>
+
+</div>
+
+<!-- EVENTOS -->
+
+<div id="eventos" class="modulo">
+
+<h2>Eventos disponibles</h2>
+
+<div class="eventos">
+
+<div class="evento">
+<img src="2.jpeg">
+<h3>Feid</h3>
+<p>Fecha: 20 Junio</p>
+<p>Edad: +18</p>
+<p>Concierto reguetton </p>
+<button onclick="evento('Feid')">Comprar boletas</button>
+</div>
+
+<div class="evento">
+<img src="3.jpeg">
+<h3>Karol G</h3>
+<p>Fecha: 22 Junio</p>
+<p>Edad: +18</p>
+<p>Concierto reguetton</p>
+<button onclick="evento('Karol G')">Comprar boletas</button>
+</div>
+
+<div class="evento">
+<img src="7.jpg">
+<h3>Doom</h3>
+<p>Fecha: 25 Junio</p>
+<p>Edad: +16</p>
+<p>Concierto Techno Night</p>
+<button onclick="evento('Doom')">Comprar boletas</button>
+</div>
+
+<div class="evento">
+<img src="1.jpeg">
+<h3>Bad Bunny</h3>
+<p>Fecha: 30 Junio</p>
+<p>Edad: +18</p>
+<p> concierto Trap Tour</p>
+<button onclick="evento('Bad Bunny')">Comprar boletas</button>
+</div>
+
+<div class="evento">
+<img src="6.jpg">
+<h3>Baswell</h3>
+<p>Fecha: 5 Julio</p>
+<p>Edad: +16</p>
+<p>concierto Techno Night</p>
+<button onclick="evento('Baswell')">Comprar boletas</button>
+</div>
+
+<div class="evento">
+<img src="5.jpg">
+<h3>Romeo Santos</h3>
+<p>Fecha: 10 Julio</p>
+<p>Edad: +18</p>
+<p>Concierto de bachata</p>
+<button onclick="evento('Romeo Santos')">Comprar boletas</button>
+</div>
+
+</div>
+
+</div>
+
+<!-- ASIENTOS -->
+
+<div id="asientos" class="modulo">
+
+<h2>Selecciona tus asientos</h2>
+
+<div id="escenario">ESCENARIO</div>
+
+<div id="mapa" class="mapa"></div>
+
+<button onclick="pagar()">Pagar asientos seleccionados</button>
+
+<button onclick="abrir('eventos')">Volver a eventos</button>
+
+</div>
+
+<!-- PAGO -->
+
+<div id="pago" class="modulo">
+
+<h2>Pago</h2>
+
+<p>Método disponible: PSE</p>
+
+<button onclick="procesarPago()">Pagar con PSE</button>
+
+</div>
+
+<!-- BOLETAS -->
+
+<div id="boletas" class="modulo">
+
+<h2>Tus Boletas</h2>
+
+<div id="qr"></div>
+
+<p id="lista"></p>
+
+<button onclick="descargar()">Descargar PDF</button>
+
+<button onclick="abrir('eventos')">Volver al inicio</button>
+
+</div>
+
+<script>
+
+let asientosSeleccionados=[]
+let eventoActual=""
+
+function abrir(id){
+
+document.querySelectorAll(".modulo").forEach(m=>m.classList.remove("activo"))
+
+document.getElementById(id).classList.add("activo")
+
+}
+
+function verPass(){
+
+let p=document.getElementById("pass")
+
+p.type = p.type==="password"?"text":"password"
+
+}
+
+function cargarCiudades(){
+
+let pais=document.getElementById("pais").value
+
+let ciudades={
+
+Colombia:["Bogotá","Medellín","Cali"],
+
+México:["CDMX","Guadalajara","Monterrey"],
+
+España:["Madrid","Barcelona","Valencia"]
+
+}
+
+let select=document.getElementById("ciudad")
+
+select.innerHTML=""
+
+ciudades[pais].forEach(c=>{
+
+let op=document.createElement("option")
+
+op.text=c
+
+select.add(op)
+
+})
+
+}
+
+cargarCiudades()
+
+function evento(nombre){
+
+eventoActual=nombre
+
+abrir("asientos")
+
+crearMapa()
+
+}
+
+function crearMapa(){
+
+let mapa=document.getElementById("mapa")
+
+mapa.innerHTML=""
+
+asientosSeleccionados=[]
+
+let letras="ABCDEFGHIJ"
+
+for(let i=0;i<50;i++){
+
+let asiento=document.createElement("div")
+
+let fila=letras[Math.floor(i/10)]
+
+let num=i%10+1
+
+let nombre=fila+num
+
+asiento.innerText=nombre
+
+asiento.className="asiento "+(i<10?"vip":i<30?"platea":"grada")
+
+asiento.onclick=()=>{
+
+asiento.classList.toggle("seleccionado")
+
+if(asientosSeleccionados.includes(nombre))
+
+asientosSeleccionados=asientosSeleccionados.filter(a=>a!=nombre)
+
+else
+
+asientosSeleccionados.push(nombre)
+
+}
+
+mapa.appendChild(asiento)
+
+}
+
+}
+
+function pagar(){
+
+if(asientosSeleccionados.length==0){
+
+alert("Selecciona al menos un asiento")
+
+return
+
+}
+
+abrir("pago")
+
+}
+
+function procesarPago(){
+
+alert("Redirigiendo a PSE")
+
+setTimeout(()=>{
+
+alert("Compra realizada con éxito")
+
+mostrarBoletas()
+
+},1000)
+
+}
+
+function mostrarBoletas(){
+
+abrir("boletas")
+
+document.getElementById("lista").innerText="Evento: "+eventoActual+" | Asientos: "+asientosSeleccionados.join(", ")
+
+document.getElementById("qr").innerHTML=""
+
+new QRCode(document.getElementById("qr"), eventoActual+" "+asientosSeleccionados.join(","))
+
+}
+
+function descargar(){
+
+const {jsPDF}=window.jspdf
+
+let doc=new jsPDF()
+
+doc.text("Focus Producciones",20,20)
+
+doc.text("Evento: "+eventoActual,20,40)
+
+doc.text("Asientos: "+asientosSeleccionados.join(", "),20,50)
+
+doc.save("boletas.pdf")
+
+}
+
+</script>
+
+</body>
+</html>
