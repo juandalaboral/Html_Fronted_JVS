@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proveedores Técnicos</title>
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:url('https://img.freepik.com/vector-gratis/tunel-luz-neon-sobre-fondo-negro_107791-31057.jpg?semt=ais_rp_progressive&w=740&q=80') no-repeat center center/cover;
+}
+
+.container{
+    padding:20px;
+    background:rgba(0,0,0,0.7);
+    min-height:100vh;
+    color:rgb(250, 250, 250);
+}
+
+h1{
+    text-align:center;
+    font-size:2.5rem;
+    background: linear-gradient(20deg, #ffbf00e1, #ff4400, #2f00ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 5s linear infinite, fadeIn 2s ease-in-out;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.events{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+    max-width:900px;
+    margin:0 auto;
+    justify-content:center;
+}
+
+.event{
+    background:#222;
+    border-radius:10px;
+    overflow:hidden;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.event:hover{transform:scale(1.05);} 
+
+.event img{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+}
+
+.event h3{
+    text-align:center;
+    padding:10px;
+}
+
+.module{
+    display:none;
+    background:#111;
+    padding:20px;
+    margin-top:20px;
+    border-radius:10px;
+}
+
+.section{margin-bottom:15px;}
+.section h4{margin-bottom:5px;}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.save{background:green;color:white;}
+.cancel{background:red;color:white;}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Proveedores Técnicos para Eventos</h1>
+
+<div class="events" id="eventList">
+
+<div class="event" onclick="openModule('Feid')">
+<img src="1.jpeg">
+<h3>Feid</h3>
+</div>
+
+<div class="event" onclick="openModule('Karol G')">
+<img src="3.jpeg">
+<h3>Karol G</h3>
+</div>
+
+<div class="event" onclick="openModule('Doom')">
+<img src="7.jpg">
+<h3>Doom</h3>
+</div>
+
+<div class="event" onclick="openModule('Bad Bunny')">
+<img src="1.jpeg">
+<h3>Bad Bunny</h3>
+</div>
+
+<div class="event" onclick="openModule('Basswell')">
+<img src="6.jpg">
+<h3>Basswell</h3>
+</div>
+
+<div class="event" onclick="openModule('Romeo Santos')">
+<img src="5.jpg">
+<h3>Romeo Santos</h3>
+</div>
+
+</div>
+
+<div id="module" class="module">
+<h2 id="eventTitle"></h2>
+
+<div id="content"></div>
+
+<button class="save" onclick="save()">Guardar</button>
+<button class="cancel" onclick="cancel()">Cancelar</button>
+
+</div>
+
+</div>
+
+<script>
+let currentEvent = "";
+let data = {};
+
+function openModule(eventName){
+    currentEvent = eventName;
+
+    if(!data[eventName]){
+        data[eventName] = {
+            checks: {},
+            personal: []
+        };
+    }
+
+    document.getElementById('eventTitle').innerText = "Evento: " + eventName;
+    document.getElementById('module').style.display = 'block';
+    document.getElementById('eventList').style.display = 'none';
+
+    render();
+}
+
+function render(){
+    let d = data[currentEvent];
+
+    document.getElementById('content').innerHTML = `
+    <div class="section">
+    <h4>Audio</h4>
+    ${checkbox('Bocinas y Subwoofers')}
+    ${checkbox('Consola de mezcla')}
+    ${checkbox('Micrófonos')}
+    </div>
+
+    <div class="section">
+    <h4>Iluminación Escénica</h4>
+    ${checkbox('Luces LED y Wash')}
+    ${checkbox('Cabezas móviles/Robóticas')}
+    ${checkbox('Consola DMX')}
+    ${checkbox('Máquina de humo')}
+    </div>
+
+    <div class="section">
+    <h4>Video y Visuales</h4>
+    ${checkbox('Pantallas LED')}
+    </div>
+
+    <div class="section">
+    <h4>Estructura y Escenario</h4>
+    ${checkbox('Escenario (Tarimas)')}
+    ${checkbox('Trípodes y Stands')}
+    ${checkbox('Cableado y conectividad')}
+    </div>
+
+    <div class="section">
+    <h4>Personal Técnico</h4>
+    <div id="personalList">
+    ${d.personal.map(p => `<div>${p} <button onclick="removePerson('${p}')">X</button></div>`).join('')}
+    </div>
+    <input type="text" id="newPerson" placeholder="Agregar personal">
+    <button onclick="addPerson()">Agregar</button>
+    </div>
+    `;
+}
+
+function checkbox(name){
+    let checked = data[currentEvent].checks[name] ? 'checked' : '';
+    return `<label><input type="checkbox" ${checked} onchange="toggle('${name}', this.checked)"> ${name}</label><br>`;
+}
+
+function toggle(name, value){
+    data[currentEvent].checks[name] = value;
+}
+
+function addPerson(){
+    let input = document.getElementById('newPerson');
+    if(input.value.trim() !== ""){
+        data[currentEvent].personal.push(input.value);
+        input.value = "";
+        render();
+    }
+}
+
+function removePerson(name){
+    data[currentEvent].personal = data[currentEvent].personal.filter(p => p !== name);
+    render();
+}
+
+function save(){
+    alert("Guardado exitosamente");
+    cancel();
+}
+
+function cancel(){
+    document.getElementById('module').style.display = 'none';
+    document.getElementById('eventList').style.display = 'grid';
+}
+</script>
+
+</body>
+</html>
